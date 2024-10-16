@@ -10,7 +10,7 @@ do
 
 	if [$File != ""];
 	then
-		objdump -M intel -d --section .text $file | grep $instruction | xargs -0 echo >> Payload.txt
+		objdump -M intel -d --section .text $file | grep $instruction | perl -pe '$_ = "'$file' $.: $_"' | xargs -0 echo >> Payload.txt
 	fi
 
 done
