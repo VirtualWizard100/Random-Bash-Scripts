@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Please type in the instruction that you wan to search for:"
+echo "Please type in the instruction that you want to search for:"
 
 read instruction
 
