@@ -2,24 +2,30 @@
 
 #You can change the input and output files to argv arguements
 
-if [ ! -f 172-16-10-addresses.txt ];
+if [ $# -lt 3 ];
 then
-	seq 1 255 | xargs -I {} echo "172.16.10."{} >> 172-16-10-addresses.txt;
+	echo "Usage: Find_Up_IP_Addresses.sh empty_infile outfile address_subnet (Example: \"172.16.10.\")";
+	exit 1;
 fi
 
-if [ ! -f 172-16-10-up-addresses.txt ];
+if [ ! -f $1 ];
 then
-	touch 172-16-10-up-addresses.txt;
+	seq 1 255 | xargs -I {} echo $3{} >> $1;
+fi
+
+if [ ! -f $2 ];
+then
+	touch $2;
 fi
 
 while true;
 do
-	for Address in $(nmap -sP -iL 172-16-10-addresses.txt | grep -B1 "Host is up" | awk '{ print $5 }' | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}");
+	for Address in $(nmap -sP -iL $1 | grep -B1 "Host is up" | awk '{ print $5 }' | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}");
 	do
-		if ! grep -q -F "$Address" 172-16-10-up-addresses.txt;
+		if ! grep -q -F "$Address" $2;
 		then
 			echo "Found new address: ${Address}";
-			echo $Address >> 172-16-10-up-addresses.txt;
+			echo $Address >> $2;
 		fi
 	done
 done
